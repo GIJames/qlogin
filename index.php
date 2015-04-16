@@ -80,8 +80,15 @@
 							$nameerr = "A user with that name was not found.<br>";
 						}
 						else{
-							
-							
+							$userResult = $userFind->fetch_assoc();
+							if(password_verify($password, $userResult['password'])){
+								if($userResult['status'] === 'banned'){
+									$err = "You are banned<br>";
+								}
+								else{
+									$err = "Logged in successfully<br>";
+								}
+							}
 						}
 					}
 					$conn->close();
