@@ -22,8 +22,8 @@
 					$nameerr = "Please use a user name under 30 characters.<br>";
 				}
 				$password = $_POST['password'];
-				if(strlen($password) > 80){
-					$pwerr = "Please use a password under 80 characters.<br>";
+				if(strlen($password) > 255){
+					$pwerr = "Please use a password under 255 characters.<br>";
 				}
 				if(!isset($emailerr) && !isset($nameerr) && !isset($pwerr)){
 					$configPath = 'config/config.txt';
@@ -40,7 +40,7 @@
 					if (!$conn) {
 						die("Connection failed: " . mysqli_connect_error());
 					}
-					//TABLE Users ( name VARCHAR(30) PRIMARY KEY, password VARCHAR(80) NOT NULL, email VARCHAR(50) NOT NULL, status VARCHAR(10))
+					//TABLE Users ( name VARCHAR(30) PRIMARY KEY, password VARCHAR(255) NOT NULL, email VARCHAR(50) NOT NULL, status VARCHAR(10))
 					//TABLE IPLog ( name VARCHAR(30), ip VARCHAR(16))
 					if(isset($email)){
 						//register new user
@@ -63,8 +63,8 @@
 						if(!isset($emailerr) && !isset($nameerr)){
 							//user does not exist; continue
 							$insertUser = $conn->prepare("INSERT INTO Users (name, password, email) VALUES (?, ?, ?)");
-							$insertUser->bind_param("sss", $name, $email, $pwhash);
-							$pwhash = password_hash($password);
+							$insertUser->bind_param("sss", $name, $pwhash, $email);
+							$pwhash = password_hash($password, PASSWORD_DEFAULT);
 							$insertUser->execute();
 							$insertUser->close();
 						}
@@ -81,13 +81,17 @@
 						}
 						else{
 							$userResult = $userFind->fetch_assoc();
-							if(password_verify($password, $userResult['password'])){
+							$pwhash = $userResult['password'];
+							if(password_verify($password, $pwhash)){
 								if($userResult['status'] === 'banned'){
 									$err = "You are banned<br>";
 								}
 								else{
 									$err = "Logged in successfully<br>";
 								}
+							}
+							else{
+								$pwerr = "Incorrect password.";
 							}
 						}
 					}
@@ -107,7 +111,7 @@
 	</head>
 	<body>
 		<form method="POST">
-			<span class="error"><?php if(isset($err)) echo $err; ?></span>
+			<span class="error"><?php if(isset($err)) echo $err;?></span>
 			<span>username:</span><input type="text" name="name" required><span class="error"><?php if(isset($nameerr)) echo $nameerr; ?></span><br>
 			<span>password:</span><input type="password" name="password" required><span class="error"><?php if(isset($pwerr)) echo $pwerr; ?></span><br>
 			<span>enter email to register:</span><input onkeyup="checkButton(this.value)" type="text" name="email"><span class="error"><?php if(isset($emailerr)) echo $emailerr;?></span><br>

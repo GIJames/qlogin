@@ -17,20 +17,21 @@
 			if (!$conn) {
 				die("Connection failed: " . mysqli_connect_error());
 			}
-			$makeTable = "CREATE TABLE Users ( name VARCHAR(30) PRIMARY KEY, password VARCHAR(80) NOT NULL, email VARCHAR(50) NOT NULL, status VARCHAR(10))";
+			$makeTable = "DROP TABLE Users";
+			if ($conn -> query($makeTable)){
+				echo "User table deletion successful<br>";
+			}
+			else{
+				echo "Creation of IPLog table failed";
+			}
+			$makeTable = "CREATE TABLE Users ( name VARCHAR(30) PRIMARY KEY, password VARCHAR(255) NOT NULL, email VARCHAR(50) NOT NULL, status VARCHAR(10))";
 			if ($conn -> query($makeTable)){
 				echo "User table created successfully";
 			}
 			else{
 				echo "Creation of user table failed";
 			}
-			$makeTable = "CREATE TABLE IPLog ( name VARCHAR(30), ip VARCHAR(16))";
-			if ($conn -> query($makeTable)){
-				echo "IPLog table created successfully";
-			}
-			else{
-				echo "Creation of IPLog table failed";
-			}
+			
 			$conn->close();
 		?>
 	</body>
