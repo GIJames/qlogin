@@ -4,9 +4,12 @@ session_start();
 <!DOCTYPE html>
 <html>
 	<body>
-		<?php
-			echo ($_SESSION["status"] === 'admin' ? "Admin panel goes here." : "User control panel goes here." );
-		?>
 		<br><a href="javascript:history.back()">Back to login page</i></a>
+		<?php
+			if($_SESSION["status"] === 'admin'){
+				//admin control panel
+				
+			}
+		?>
 	</body>
 </html>
