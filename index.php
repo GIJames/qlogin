@@ -1,8 +1,11 @@
+<?php
+session_start();
+?>
 <!DOCTYPE html>
 <html>
 	<head>
 		<?php
-			ini_set('display_errors', 1); error_reporting(E_ALL);
+			//ini_set('display_errors', 1); error_reporting(E_ALL);
 			if($_SERVER['REQUEST_METHOD'] == 'POST' && !empty($_POST['name']) && !empty($_POST['password'])){
 				if(!empty($_POST['email'])){
 					//register new user
@@ -62,7 +65,7 @@
 						}
 						if(!isset($emailerr) && !isset($nameerr)){
 							//user does not exist; continue
-							$insertUser = $conn->prepare("INSERT INTO Users (name, password, email) VALUES (?, ?, ?)");
+							$insertUser = $conn->prepare("INSERT INTO Users (name, password, email, status) VALUES (?, ?, ?)");
 							$insertUser->bind_param("sss", $name, $pwhash, $email);
 							$pwhash = password_hash($password, PASSWORD_DEFAULT);
 							$insertUser->execute();
@@ -83,12 +86,16 @@
 							$userResult = $userFind->fetch_assoc();
 							$pwhash = $userResult['password'];
 							if(password_verify($password, $pwhash)){
-								if($userResult['status'] === 'banned'){
+								$userStatus = $userResult['status'];
+								if($userStatus === 'banned'){
 									$err = "You are banned<br>";
 								}
 								else{
 									$err = "Logged in successfully<br>";
+									$_SESSION["name"] = $name;
+									$_SESSION["status"] = $userStatus;
 								}
+								//log IP address here
 							}
 							else{
 								$pwerr = "Incorrect password.";
@@ -110,7 +117,10 @@
 		<script src="js/login.js"></script>
 	</head>
 	<body>
+		<a href="admin.php">Control Panel</a><br>
+		<a href="logout.php">Log Out</a><br>
 		<form method="POST">
+			<span><?php if($userStatus === 'admin') echo "You are an administrator.<br>"?></span>
 			<span class="error"><?php if(isset($err)) echo $err;?></span>
 			<span>username:</span><input type="text" name="name" required><span class="error"><?php if(isset($nameerr)) echo $nameerr; ?></span><br>
 			<span>password:</span><input type="password" name="password" required><span class="error"><?php if(isset($pwerr)) echo $pwerr; ?></span><br>
