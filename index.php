@@ -65,12 +65,13 @@ session_start();
 						}
 						if(!isset($emailerr) && !isset($nameerr)){
 							//user does not exist; continue
-							$insertUser = $conn->prepare("INSERT INTO Users (name, password, email, status) VALUES (?, ?, ?)");
+							$insertUser = $conn->prepare("INSERT INTO Users (name, password, email) VALUES (?, ?, ?)");
 							$insertUser->bind_param("sss", $name, $pwhash, $email);
 							$pwhash = password_hash($password, PASSWORD_DEFAULT);
 							$insertUser->execute();
 							$insertUser->close();
 							$err = "Registration successful.<br>";
+							$_SESSION["name"] = $name;
 						}
 					}
 					else{

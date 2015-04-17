@@ -2,13 +2,15 @@ var users = [];
 
 var filters = {
 	name: "",
-	email: ""
+	email: "",
+	status: ""
 }
 
 function reFilter(){
 	var filterForm = document.getElementById("filters").elements;
 	filters.name = filterForm.namedItem("name").value;
 	filters.email = filterForm.namedItem("email").value;
+	filters.status = filterForm.namedItem("status").value;
 	finishRefresh();
 }
 
@@ -19,14 +21,21 @@ function filtered(user){
 	if(user.email.toLowerCase().search(filters.email.toLowerCase()) == -1){
 		return true;
 	}
+	if(user.status && user.status.toLowerCase().search(filters.status.toLowerCase()) == -1){
+		return true;
+	}
 	return false;
 }
 
+function takeAction(action, username){
+	window.location.assign("action.php?user=" + username + "&action=" + action);
+}
+
 function finishRefresh(){
-	var contentsString = "<tr><th>user</th><th>email</th><th>action</th></tr>";
+	var contentsString = "<tr><th>user</th><th>email</th><th>status</th><th>action</th></tr>";
 	for(user in users){
 		if(!filtered(users[user])){
-			contentsString = contentsString + "<tr><td>" + users[user].name + "</td><td>" + users[user].email + "</td><td>" + "<select onchange=\"takeAction(this.value, " + users[user].name + ")\" type=\"text\"><option value=\"none\">none</option><option value=\"ban\">ban</option><option value=\"admin\">admin</option><option value=\"delete\">delete</option></select>" + "</td></tr>";
+			contentsString = contentsString + "<tr><td>" + users[user].name + "</td><td>" + users[user].email + "</td><td>" + users[user].status + "</td><td>" + "<select onchange=\"takeAction(this.value, &quot;" + users[user].name + "&quot;)\" type=\"text\"><option value=\"none\">none</option><option value=\"ban\">ban</option><option value=\"admin\">admin</option><option value=\"delete\">delete</option></select>" + "</td></tr>";
 		}
 	}
 	document.getElementById("users").innerHTML = contentsString;
@@ -36,7 +45,6 @@ function finishRefresh(){
 function continueRefresh(response){
 	var jsonResponse = JSON.parse(response);
 	users = jsonResponse;
-	console.log(users);
 	finishRefresh();
 }
 

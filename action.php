@@ -4,7 +4,6 @@ session_start();
 <!DOCTYPE html>
 <html>
 	<body>
-		<br><a href="javascript:history.back()">Back to control panel</i></a>
 		<?php
 			if($_SESSION["status"] === 'admin'){
 				$user = $_GET["user"];
@@ -46,7 +45,9 @@ session_start();
 				$update->close();
 				}
 				$conn->close();
+				echo $user . " " . $action . " successful.";
 			}
 		?>
+		<br><a href="admin.php">Back to admin page</i></a>
 	</body>
 </html>
