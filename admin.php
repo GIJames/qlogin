@@ -26,9 +26,6 @@ session_start();
 				echo '<table id="users" class="userTable">';
 				echo '</table>';
 			}
-			else{
-				echo 'You are: ' . $_SESSION["name"];
-			}
 		?>
 		<br><a href="index.php">Back to login page</i></a>
 	</body>

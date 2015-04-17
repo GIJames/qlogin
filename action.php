@@ -36,6 +36,10 @@ session_start();
 						$update = $conn->prepare("DELETE FROM Users WHERE name=?");
 						$update->bind_param("s", $user);
 					break;
+					case 'reset':
+						$update = $conn->prepare("UPDATE Users SET status=NULL WHERE name=?");
+						$update->bind_param("s", $user);
+					break;
 					default:
 						$takeAction = false;
 						echo "Invalid action.";

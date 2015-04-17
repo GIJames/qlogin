@@ -119,8 +119,13 @@ session_start();
 		<script src="js/login.js"></script>
 	</head>
 	<body>
-		<a href="admin.php">Control Panel</a><br>
-		<a href="logout.php">Log Out</a><br>
+		<?php
+		if(isset($_SESSION["name"])){
+			echo '<a href="controlpanel.php">Control Panel</a><br>';
+			echo '<a href="logout.php">Log Out</a><br>';
+		}
+		if($_SESSION["status"] === 'admin') echo '<a href="admin.php">Admin Control Panel</a><br>';
+		?>
 		<form method="POST">
 			<span><?php if($userStatus === 'admin') echo "You are an administrator.<br>"?></span>
 			<span class="error"><?php if(isset($err)) echo $err;?></span>
