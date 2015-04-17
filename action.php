@@ -42,7 +42,7 @@ session_start();
 					break;
 					default:
 						$takeAction = false;
-						echo "Invalid action.";
+						echo "Invalid action " . $_GET["action"] . "<br>";
 				}
 				if($takeAction){
 				$update->execute();
