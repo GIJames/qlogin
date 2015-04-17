@@ -70,6 +70,7 @@ session_start();
 							$pwhash = password_hash($password, PASSWORD_DEFAULT);
 							$insertUser->execute();
 							$insertUser->close();
+							$err = "Registration successful.<br>";
 						}
 					}
 					else{

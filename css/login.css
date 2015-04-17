@@ -1,3 +1,13 @@
 .error {
 	color: red;
 }
+
+
+table, th, td {
+	border: 1px solid black;
+    border-collapse: collapse;
+}
+
+.userTable {
+	width: 100%;
+}
