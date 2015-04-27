@@ -4,16 +4,7 @@ session_start();
 <?php
 	if($_SESSION["status"] === 'admin'){
 		//list users
-		$configPath = '../config/config.txt';
-		if (!file_exists($configPath)) {
-			die('Database configuration file not found.');
-		}
-		$credentials = fopen($configPath, 'r') or die("Unable to access database configuration.");
-		$dbhost = trim(fgets($credentials));
-		$dbname = trim(fgets($credentials));
-		$dbuser = trim(fgets($credentials));
-		$dbpassword = trim(fgets($credentials));
-		fclose($credentials);
+		include '../config/db_credentials.php';
 		$conn = mysqli_connect($dbhost , $dbuser, $dbpassword, $dbname);
 		if (!$conn) {
 			die("Connection failed: " . mysqli_connect_error());
